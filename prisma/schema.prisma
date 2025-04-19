@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String           @id @default(uuid())
+  name        String           @db.VarChar(100)
+  lastName    String           @db.VarChar(100)
+  email       String           @unique @db.VarChar(255)
+  password    String
+  status      Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  clientRoles ClientRoleUser[]
+}
+
+model Client {
+  id          String           @id @default(uuid())
+  name        String           @db.VarChar(100)
+  status      Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  clientRoles ClientRoleUser[]
+  menus       Menu[]
+
+  @@index([name])
+}
+
+model Role {
+  id          String                    @id @default(uuid())
+  name        String                    @db.VarChar(50)
+  description String?                   @db.VarChar(255)
+  status      Boolean                   @default(true)
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+  clientRoles ClientRoleUser[]
+  permissions RoleSubmodulePermission[]
+
+  @@index([name])
+}
+
+model ClientRoleUser {
+  id        String   @id @default(uuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id])
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([clientId, roleId, userId])
+}
+
+model Module {
+  id         String      @id @default(uuid())
+  name       String      @db.VarChar(50)
+  url        String      @db.VarChar(100)
+  status     Boolean     @default(true)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  submodules Submodule[]
+
+  @@index([name])
+  @@index([url])
+}
+
+model Submodule {
+  id                       String                    @id @default(uuid())
+  name                     String                    @db.VarChar(50)
+  url                      String                    @db.VarChar(100)
+  moduleId                 String
+  module                   Module                    @relation(fields: [moduleId], references: [id])
+  status                   Boolean                   @default(true)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  roleSubmodulePermissions RoleSubmodulePermission[]
+
+  @@index([name])
+  @@index([url])
+}
+
+model Permission {
+  id                       String                    @id @default(uuid())
+  name                     String                    @db.VarChar(50)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  roleSubmodulePermissions RoleSubmodulePermission[]
+
+  @@index([name])
+}
+
+model RoleSubmodulePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id])
+  submoduleId  String
+  submodule    Submodule  @relation(fields: [submoduleId], references: [id])
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([roleId, submoduleId, permissionId])
+}
+
+model Restaurant {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(100)
+  description String?
+  menus       Menu[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Menu {
+  id           String         @id @default(uuid())
+  name         String         @db.VarChar(100)
+  description  String?
+  restaurantId String
+  restaurant   Restaurant     @relation(fields: [restaurantId], references: [id])
+  categories   MenuCategory[]
+  isActive     Boolean        @default(true)
+  displayOrder Int
+  Client       Client?        @relation(fields: [clientId], references: [id])
+  clientId     String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([restaurantId, displayOrder])
+}
+
+model MenuCategory {
+  id             String             @id @default(uuid())
+  name           String             @db.VarChar(100)
+  description    String?
+  menuId         String
+  menu           Menu               @relation(fields: [menuId], references: [id])
+  items          MenuItem[]
+  selectionRules CategorySelection?
+  displayOrder   Int
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([menuId, displayOrder])
+}
+
+model CategorySelection {
+  id             String       @id @default(uuid())
+  category       MenuCategory @relation(fields: [id], references: [id])
+  isRequired     Boolean      @default(false)
+  minSelections  Int          @default(1)
+  maxSelections  Int          @default(1)
+  allowsMultiple Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model MenuItem {
+  id           String         @id @default(uuid())
+  name         String         @db.VarChar(100)
+  description  String?
+  price        Float          @default(0)
+  categoryId   String
+  category     MenuCategory   @relation(fields: [categoryId], references: [id])
+  options      ItemOption[]
+  modifiers    ItemModifier[]
+  isActive     Boolean        @default(true)
+  displayOrder Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([categoryId, displayOrder])
+}
+
+model ItemOption {
+  id           String         @id @default(uuid())
+  name         String         @db.VarChar(50)
+  itemId       String
+  item         MenuItem       @relation(fields: [itemId], references: [id])
+  choices      OptionChoice[]
+  isRequired   Boolean        @default(false)
+  displayOrder Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model OptionChoice {
+  id              String     @id @default(uuid())
+  optionId        String
+  option          ItemOption @relation(fields: [optionId], references: [id])
+  value           String     @db.VarChar(50)
+  priceAdjustment Float      @default(0)
+  isActive        Boolean    @default(true)
+  displayOrder    Int
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model ItemModifier {
+  id              String   @id @default(uuid())
+  itemId          String
+  item            MenuItem @relation(fields: [itemId], references: [id])
+  name            String   @db.VarChar(50)
+  priceAdjustment Float    @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
