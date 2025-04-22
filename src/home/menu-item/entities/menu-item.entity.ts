@@ -1,9 +1,10 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ItemModifier } from 'src/home/item-modifier/entities/item-modifier.entity';
+import { ItemOption } from 'src/home/item-option/entities/item-option.entity';
 import { MenuCategory } from 'src/home/menu-category/entities/menu-category.entity';
-import { Restaurant } from 'src/home/restaurant/entities/restaurant.entity';
 
 @ObjectType()
-export class Menu {
+export class MenuItem {
   @Field(() => ID)
   id: string;
 
@@ -13,26 +14,26 @@ export class Menu {
   @Field(() => String, { nullable: true })
   description?: string;
 
+  @Field(() => Number, { defaultValue: 0 })
+  price: number;
+
   @Field(() => String)
-  restaurantId: string;
+  categoryId: string;
 
-  @Field(() => Restaurant)
-  restaurant: Restaurant;
+  @Field(() => MenuCategory)
+  category: MenuCategory;
 
-  @Field(() => [MenuCategory])
-  categories: MenuCategory[];
+  @Field(() => [ItemOption])
+  options: ItemOption[];
+
+  @Field(() => [ItemModifier])
+  modifiers: ItemModifier[];
 
   @Field(() => Boolean, { defaultValue: true })
   isActive: boolean;
 
   @Field(() => Number)
   displayOrder: number;
-
-  // @Field(() => Clien, { nullable: true })
-  // client?: Client;
-
-  @Field(() => String, { nullable: true })
-  clientId?: string;
 
   @Field(() => Date)
   createdAt: Date;

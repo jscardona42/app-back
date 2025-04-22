@@ -1,30 +1,37 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-// import { MenuItem } from '../../menu-item/entities/menu-item.entity';
-// import { CategorySelection } from './category-selection.entity';
+import { CategorySelection } from 'src/home/category-selection/entities/category-selection.entity';
+import { MenuItem } from 'src/home/menu-item/entities/menu-item.entity';
+import { Menu } from 'src/home/menu/entities/menu.entity';
 
 @ObjectType()
 export class MenuCategory {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @Field(() => String)
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   description?: string;
 
-  // @Field(() => [MenuItem])
-  // items: MenuItem[];
+  @Field(() => String)
+  menuId: string;
 
-  // @Field(() => CategorySelection, { nullable: true })
-  // selectionRules?: CategorySelection;
+  @Field(() => Menu)
+  menu: Menu;
 
-  @Field()
+  @Field(() => [MenuItem])
+  items: MenuItem[];
+
+  @Field(() => CategorySelection, { nullable: true })
+  selectionRules?: CategorySelection;
+
+  @Field(() => Number)
   displayOrder: number;
 
-  @Field()
+  @Field(() => Date)
   createdAt: Date;
 
-  @Field()
+  @Field(() => Date)
   updatedAt: Date;
 }

@@ -1,22 +1,22 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
 
 @InputType()
-export class CreateMenuCategoryInput {
+export class CreateItemOptionInput {
   @Field(() => String)
   name: string;
 
-  @Field(() => String, { nullable: true })
-  description?: string;
-
   @Field(() => String)
-  menuId: string;
+  itemId: string;
+
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  isRequired?: boolean;
 
   @Field(() => Number)
   displayOrder: number;
 }
 
 @InputType()
-export class UpdateMenuCategoryInput {
+export class UpdateItemOptionInput {
   @Field(() => ID)
   id: string;
 
@@ -24,10 +24,10 @@ export class UpdateMenuCategoryInput {
   name?: string;
 
   @Field(() => String, { nullable: true })
-  description?: string;
+  itemId?: string;
 
-  @Field(() => String, { nullable: true })
-  menuId?: string;
+  @Field(() => Boolean, { nullable: true })
+  isRequired?: boolean;
 
   @Field(() => Number, { nullable: true })
   displayOrder?: number;

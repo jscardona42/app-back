@@ -23,7 +23,7 @@ export class MenuService {
       include: {
         categories: {
           include: {
-            items: true,
+            items: true
           },
         },
       },
