@@ -17,7 +17,7 @@ export class ItemOption {
   item: MenuItem;
 
   @Field(() => [OptionChoice])
-  choices: OptionChoice[];
+  optionChoices: OptionChoice[];
 
   @Field(() => Boolean, { defaultValue: false })
   isRequired: boolean;

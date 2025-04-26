@@ -21,9 +21,9 @@ export class MenuService {
   async getMenu() {
     return this.prisma.menu.findMany({
       include: {
-        categories: {
+        menuCategories: {
           include: {
-            items: true
+            menuItems: true
           },
         },
       },

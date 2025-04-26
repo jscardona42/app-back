@@ -13,12 +13,18 @@ export class RestaurantResolver {
   }
 
   @Query(() => [Restaurant], { name: 'restaurants' })
-  findAll() {
-    return this.restaurantService.findAll();
+  getRestaurants() {
+    return this.restaurantService.getRestaurants();
   }
 
-  @Query(() => Restaurant, { name: 'restaurant' })
+  @Query(() => Restaurant)
   findOne(@Args('id', { type: () => ID }) id: string) {
-    return this.restaurantService.findOne(id);
+    return this.restaurantService.getRestaurantById(id);
+  }
+
+  @Mutation(() => String)
+  async populateDemoData(): Promise<string> {
+    await this.restaurantService.populateDemoData();
+    return 'Datos de prueba creados con éxito 🚀';
   }
 }

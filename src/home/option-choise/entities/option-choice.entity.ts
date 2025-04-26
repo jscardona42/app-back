@@ -10,7 +10,7 @@ export class OptionChoice {
   optionId: string;
 
   @Field(() => ItemOption)
-  option: ItemOption;
+  itemOption: ItemOption;
 
   @Field(() => String)
   value: string;

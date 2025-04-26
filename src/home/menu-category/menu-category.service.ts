@@ -12,8 +12,8 @@ export class MenuCategoryService {
         ...createMenuCategoryInput
       },
       include: {
-        selectionRules: true,
-        items: true
+        categorySelection: true,
+        menuItems: true
       }
     });
   }
@@ -21,8 +21,8 @@ export class MenuCategoryService {
   async findAll() {
     return this.prisma.menuCategory.findMany({
       include: {
-        selectionRules: true,
-        items: true
+        categorySelection: true,
+        menuItems: true
       }
     });
   }
@@ -31,8 +31,8 @@ export class MenuCategoryService {
     return this.prisma.menuCategory.findUnique({
       where: { id },
       include: {
-        selectionRules: true,
-        items: true
+        categorySelection: true,
+        menuItems: true
       }
     });
   }
@@ -42,8 +42,8 @@ export class MenuCategoryService {
       where: { id },
       data: updateMenuCategoryInput,
       include: {
-        selectionRules: true,
-        items: true
+        categorySelection: true,
+        menuItems: true
       }
     });
   }

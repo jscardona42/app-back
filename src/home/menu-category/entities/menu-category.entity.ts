@@ -21,10 +21,10 @@ export class MenuCategory {
   menu: Menu;
 
   @Field(() => [MenuItem])
-  items: MenuItem[];
+  menuItems: MenuItem[];
 
   @Field(() => CategorySelection, { nullable: true })
-  selectionRules?: CategorySelection;
+  categorySelection?: CategorySelection;
 
   @Field(() => Number)
   displayOrder: number;

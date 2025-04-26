@@ -15,7 +15,7 @@ import { ItemModifierModule } from './home/item-modifier/item-modifier.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      include: [],
+      include: [RestaurantModule],
     }),
     MenuModule,
     RestaurantModule,

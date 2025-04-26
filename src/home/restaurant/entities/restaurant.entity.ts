@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Menu } from 'src/home/menu/entities/menu.entity';
 
 @ObjectType()
 export class Restaurant {
@@ -10,6 +11,9 @@ export class Restaurant {
 
   @Field({ nullable: true })
   description?: string;
+
+  @Field(() => [Menu])
+  menus: Menu[]
 
   @Field()
   createdAt: Date;

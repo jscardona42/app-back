@@ -13,6 +13,9 @@ export class Menu {
   @Field(() => String, { nullable: true })
   description?: string;
 
+  @Field(() => String, { nullable: true })
+  img?: string;
+
   @Field(() => String)
   restaurantId: string;
 
@@ -20,7 +23,7 @@ export class Menu {
   restaurant: Restaurant;
 
   @Field(() => [MenuCategory])
-  categories: MenuCategory[];
+  menuCategories: MenuCategory[];
 
   @Field(() => Boolean, { defaultValue: true })
   isActive: boolean;

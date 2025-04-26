@@ -20,26 +20,26 @@ model User {
 }
 
 model Client {
-  id          String           @id @default(uuid())
-  name        String           @db.VarChar(100)
-  status      Boolean          @default(true)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  clientRoles ClientRoleUser[]
-  menus       Menu[]
+  id             String           @id @default(uuid())
+  name           String           @db.VarChar(100)
+  status         Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  clientRoleUser ClientRoleUser[]
+  menus          Menu[]
 
   @@index([name])
 }
 
 model Role {
-  id          String                    @id @default(uuid())
-  name        String                    @db.VarChar(50)
-  description String?                   @db.VarChar(255)
-  status      Boolean                   @default(true)
-  createdAt   DateTime                  @default(now())
-  updatedAt   DateTime                  @updatedAt
-  clientRoles ClientRoleUser[]
-  permissions RoleSubmodulePermission[]
+  id             String                    @id @default(uuid())
+  name           String                    @db.VarChar(50)
+  description    String?                   @db.VarChar(255)
+  status         Boolean                   @default(true)
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+  clientRoleUser ClientRoleUser[]
+  permissions    RoleSubmodulePermission[]
 
   @@index([name])
 }
@@ -120,40 +120,41 @@ model Restaurant {
 }
 
 model Menu {
-  id           String         @id @default(uuid())
-  name         String         @db.VarChar(100)
-  description  String?
-  restaurantId String
-  restaurant   Restaurant     @relation(fields: [restaurantId], references: [id])
-  categories   MenuCategory[]
-  isActive     Boolean        @default(true)
-  displayOrder Int
-  Client       Client?        @relation(fields: [clientId], references: [id])
-  clientId     String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id             String         @id @default(uuid())
+  name           String         @db.VarChar(100)
+  img            String?        @db.Text()
+  description    String?
+  restaurantId   String
+  restaurant     Restaurant     @relation(fields: [restaurantId], references: [id])
+  menuCategories MenuCategory[]
+  isActive       Boolean        @default(true)
+  displayOrder   Int
+  Client         Client?        @relation(fields: [clientId], references: [id])
+  clientId       String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   @@index([restaurantId, displayOrder])
 }
 
 model MenuCategory {
-  id             String             @id @default(uuid())
-  name           String             @db.VarChar(100)
-  description    String?
-  menuId         String
-  menu           Menu               @relation(fields: [menuId], references: [id])
-  items          MenuItem[]
-  selectionRules CategorySelection?
-  displayOrder   Int
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id                String             @id @default(uuid())
+  name              String             @db.VarChar(100)
+  description       String?
+  menuId            String
+  menu              Menu               @relation(fields: [menuId], references: [id])
+  menuItems         MenuItem[]
+  categorySelection CategorySelection?
+  displayOrder      Int
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@index([menuId, displayOrder])
 }
 
 model CategorySelection {
   id             String       @id @default(uuid())
-  category       MenuCategory @relation(fields: [id], references: [id])
+  menuCategory   MenuCategory @relation(fields: [id], references: [id])
   isRequired     Boolean      @default(false)
   minSelections  Int          @default(1)
   maxSelections  Int          @default(1)
@@ -163,38 +164,38 @@ model CategorySelection {
 }
 
 model MenuItem {
-  id           String         @id @default(uuid())
-  name         String         @db.VarChar(100)
-  description  String?
-  price        Float          @default(0)
-  categoryId   String
-  category     MenuCategory   @relation(fields: [categoryId], references: [id])
-  options      ItemOption[]
-  modifiers    ItemModifier[]
-  isActive     Boolean        @default(true)
-  displayOrder Int
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id            String         @id @default(uuid())
+  name          String         @db.VarChar(100)
+  description   String?
+  price         Float          @default(0)
+  categoryId    String
+  menuCategory  MenuCategory   @relation(fields: [categoryId], references: [id])
+  itemOptions   ItemOption[]
+  itemModifiers ItemModifier[]
+  isActive      Boolean        @default(true)
+  displayOrder  Int
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([categoryId, displayOrder])
 }
 
 model ItemOption {
-  id           String         @id @default(uuid())
-  name         String         @db.VarChar(50)
-  itemId       String
-  item         MenuItem       @relation(fields: [itemId], references: [id])
-  choices      OptionChoice[]
-  isRequired   Boolean        @default(false)
-  displayOrder Int
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id            String         @id @default(uuid())
+  name          String         @db.VarChar(50)
+  itemId        String
+  menuItem      MenuItem       @relation(fields: [itemId], references: [id])
+  optionChoices OptionChoice[]
+  isRequired    Boolean        @default(false)
+  displayOrder  Int
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model OptionChoice {
   id              String     @id @default(uuid())
   optionId        String
-  option          ItemOption @relation(fields: [optionId], references: [id])
+  itemOption      ItemOption @relation(fields: [optionId], references: [id])
   value           String     @db.VarChar(50)
   priceAdjustment Float      @default(0)
   isActive        Boolean    @default(true)
@@ -206,7 +207,7 @@ model OptionChoice {
 model ItemModifier {
   id              String   @id @default(uuid())
   itemId          String
-  item            MenuItem @relation(fields: [itemId], references: [id])
+  menuItem        MenuItem @relation(fields: [itemId], references: [id])
   name            String   @db.VarChar(50)
   priceAdjustment Float    @default(0)
   isActive        Boolean  @default(true)

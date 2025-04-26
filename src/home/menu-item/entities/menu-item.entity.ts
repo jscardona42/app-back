@@ -21,13 +21,13 @@ export class MenuItem {
   categoryId: string;
 
   @Field(() => MenuCategory)
-  category: MenuCategory;
+  menuCategory: MenuCategory;
 
   @Field(() => [ItemOption])
-  options: ItemOption[];
+  itemOptions: ItemOption[];
 
   @Field(() => [ItemModifier])
-  modifiers: ItemModifier[];
+  itemModifiers: ItemModifier[];
 
   @Field(() => Boolean, { defaultValue: true })
   isActive: boolean;
